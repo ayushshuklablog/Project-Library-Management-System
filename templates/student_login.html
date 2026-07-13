@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Student Login</title>
+</head>
+
+
+<body>
+
+
+<h1>🎓 Student Login</h1>
+
+
+<form method="POST">
+
+
+<label>Library ID</label><br>
+<input type="text" name="student_id" required>
+
+<br><br>
+
+
+<label>Mobile Number</label><br>
+<input type="password" name="mobile" required>
+
+
+<br><br>
+
+
+<input type="submit" value="Login">
+
+
+</form>
+
+
+{% if message %}
+
+<h3>{{ message }}</h3>
+
+{% endif %}
+
+
+<br>
+
+<a href="/">
+    ⬅ Back
+</a>
+
+
+</body>
+
+</html>

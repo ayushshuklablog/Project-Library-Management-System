@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>My Issued Books</title>
+
+</head>
+
+
+<body>
+
+
+<h1>📖 My Issued Books</h1>
+
+
+
+<table border="1" cellpadding="10">
+
+
+<tr>
+
+<th>Student ID</th>
+
+<th>Book ID</th>
+
+<th>Status</th>
+
+</tr>
+
+
+
+{% for book in books %}
+
+
+<tr>
+
+<td>{{book[0]}}</td>
+
+<td>{{book[1]}}</td>
+
+<td>{{book[2]}}</td>
+
+
+</tr>
+
+
+{% endfor %}
+
+
+</table>
+
+
+
+<br>
+
+
+<a href="/student_dashboard">
+
+⬅ Back
+
+</a>
+
+
+</body>
+
+</html>

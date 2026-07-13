@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Delete Book</title>
+
+</head>
+
+
+<body>
+
+
+<h1>🗑 Delete Book</h1>
+
+
+<form method="POST">
+
+
+<label>Enter Book ID</label><br>
+
+
+<input 
+type="text"
+name="book_id"
+placeholder="Book ID"
+required
+>
+
+
+<br><br>
+
+
+<input 
+type="submit"
+value="Delete Book"
+>
+
+
+</form>
+
+
+
+{% if message %}
+
+<h3>{{message}}</h3>
+
+{% endif %}
+
+
+
+<br>
+
+<a href="/books">⬅ Back</a>
+
+
+</body>
+
+</html>
