@@ -1,85 +1,438 @@
+from flask import Flask, render_template, request
+
 from modules import login
 from modules import book
 from modules import student
 from modules import issue
 from modules import report
 
-while True:
 
-    print("\n====================================")
-    print("   LIBRARY MANAGEMENT SYSTEM")
-    print("====================================")
-    print("1. Admin Login")
-    print("2. Student Login")
-    print("3. Exit")
+app = Flask(__name__)
 
-    choice = input("Enter your choice: ")
 
-    if choice == "1":
+# ================= HOME =================
 
-        if login.admin_login():
+@app.route("/")
+def home():
+    return render_template("index.html")
 
-            while True:
 
-               print("\n========== ADMIN PANEL ==========")
-               print("1. Book Management")
-               print("2. Student Management")
-               print("3. Issue Book")
-               print("4. Return Book")
-               print("5. Reports")
-               print("6. Logout")
 
-               admin_choice = input("Enter your choice: ")
+# ================= ADMIN LOGIN =================
 
-               if admin_choice == "1":
-                   book.book_menu()
+@app.route("/admin", methods=["GET", "POST"])
+def admin():
 
-               elif admin_choice == "2":
-                     student.student_menu()
+    if request.method == "POST":
 
-               elif admin_choice == "3":
-                     issue.issue_book()
+        username = request.form["username"]
+        password = request.form["password"]
 
-               elif admin_choice == "4":
-                     issue.return_book()
+        if username == "admin" and password == "admin123":
 
-               elif admin_choice == "5":
-                     report.reports()
+            return render_template(
+                "admin_dashboard.html"
+            )
 
-               elif admin_choice == "6":
-                break
+        else:
+            return "<h2>Invalid Username or Password</h2>"
 
-            else:
-                print("Invalid Choice!")
-                
-    elif choice == "2":
 
-        student_id = login.student_login()
+    return render_template("admin_login.html")
 
-        if student_id:
 
-            while True:
 
-              print("\n========== STUDENT PANEL ==========")
-              print("Welcome :", student_id)
-              print("1. View Books")
-              print("2. Search Book")
-              print("3. View My Details")
-              print("4. Logout")
+# =================================================
+#                 BOOK MANAGEMENT
+# =================================================
 
-              student_choice = input("Enter your choice: ")
 
-              if student_choice == "1":
-                book.view_books()
+@app.route("/books")
+def books():
 
-              elif student_choice == "2":
-                book.search_book()
+    return render_template("books.html")
 
-              elif student_choice == "3":
-                student.view_student(student_id)
 
-              elif student_choice == "4":
-                break
 
-              else:
-                print("Invalid Choice!")
+@app.route("/add_book", methods=["GET","POST"])
+def add_book():
+
+    message = ""
+
+
+    if request.method == "POST":
+
+        message = book.add_book(
+
+            request.form["book_id"],
+            request.form["title"],
+            request.form["author"],
+            request.form["category"],
+            request.form["quantity"]
+
+        )
+
+
+    return render_template(
+        "add_book.html",
+        message=message
+    )
+
+
+
+@app.route("/view_books")
+def view_books():
+
+    books_data = book.view_books()
+
+
+    return render_template(
+        "view_books.html",
+        books=books_data
+    )
+
+
+
+@app.route("/search_book", methods=["GET","POST"])
+def search_book():
+
+    result = None
+
+
+    if request.method == "POST":
+
+        result = book.search_book(
+            request.form["book_id"]
+        )
+
+
+    return render_template(
+        "search_book.html",
+        result=result
+    )
+
+
+
+@app.route("/update_book", methods=["GET","POST"])
+def update_book():
+
+    message = ""
+
+
+    if request.method == "POST":
+
+        message = book.update_book(
+
+            request.form["book_id"],
+            request.form["title"],
+            request.form["author"],
+            request.form["category"],
+            request.form["quantity"]
+
+        )
+
+
+    return render_template(
+        "update_book.html",
+        message=message
+    )
+
+
+
+@app.route("/delete_book", methods=["GET","POST"])
+def delete_book():
+
+    message = ""
+
+
+    if request.method == "POST":
+
+        message = book.delete_book(
+
+            request.form["book_id"]
+
+        )
+
+
+    return render_template(
+        "delete_book.html",
+        message=message
+    )
+
+
+
+# =================================================
+#              STUDENT MANAGEMENT
+# =================================================
+
+
+@app.route("/students")
+def students():
+
+    return render_template("students.html")
+
+
+
+@app.route("/add_student", methods=["GET","POST"])
+def add_student():
+
+    message = ""
+
+
+    if request.method == "POST":
+
+        message = student.add_student(
+
+            request.form["student_id"],
+            request.form["name"],
+            request.form["roll_no"],
+            request.form["department"],
+            request.form["year"],
+            request.form["mobile"]
+
+        )
+
+
+    return render_template(
+        "add_student.html",
+        message=message
+    )
+
+
+
+@app.route("/view_students")
+def view_students():
+
+    students_data = student.view_students()
+
+
+    return render_template(
+        "view_students.html",
+        students=students_data
+    )
+
+
+
+@app.route("/search_student", methods=["GET","POST"])
+def search_student():
+
+    result = None
+
+
+    if request.method == "POST":
+
+        result = student.search_student(
+            request.form["student_id"]
+        )
+
+
+    return render_template(
+        "search_student.html",
+        result=result
+    )
+
+
+
+@app.route("/update_student", methods=["GET","POST"])
+def update_student():
+
+    message = ""
+
+
+    if request.method == "POST":
+
+        message = student.update_student(
+
+            request.form["student_id"],
+            request.form["name"],
+            request.form["roll_no"],
+            request.form["department"],
+            request.form["year"],
+            request.form["mobile"]
+
+        )
+
+
+    return render_template(
+        "update_student.html",
+        message=message
+    )
+
+
+
+@app.route("/delete_student", methods=["GET","POST"])
+def delete_student():
+
+    message = ""
+
+
+    if request.method == "POST":
+
+        message = student.delete_student(
+
+            request.form["student_id"]
+
+        )
+
+
+    return render_template(
+        "delete_student.html",
+        message=message
+    )
+
+
+
+# =================================================
+#              STUDENT LOGIN
+# =================================================
+
+
+@app.route("/student_login", methods=["GET","POST"])
+def student_login():
+
+    message = ""
+
+
+    if request.method == "POST":
+
+        success = student.student_login(
+
+            request.form["student_id"],
+            request.form["mobile"]
+
+        )
+
+
+        if success:
+
+            return render_template(
+                "student_dashboard.html"
+            )
+
+        else:
+
+            message = "Invalid Library ID or Mobile Number"
+
+
+
+    return render_template(
+        "student_login.html",
+        message=message
+    )
+
+
+
+# =================================================
+#              STUDENT DASHBOARD
+# =================================================
+
+
+@app.route("/student_dashboard")
+def student_dashboard():
+
+    return render_template(
+        "student_dashboard.html"
+    )
+
+
+
+# =================================================
+#              MY ISSUED BOOKS
+# =================================================
+
+
+@app.route("/my_books")
+def my_books():
+
+    books = issue.view_issue()
+
+
+    return render_template(
+        "my_books.html",
+        books=books
+    )
+
+
+
+# =================================================
+#                 ISSUE BOOK
+# =================================================
+
+
+@app.route("/issue", methods=["GET","POST"])
+def issue_book():
+
+    message = ""
+
+
+    if request.method == "POST":
+
+        message = issue.issue_book(
+
+            request.form["student_id"],
+            request.form["book_id"]
+
+        )
+
+
+    return render_template(
+        "issue.html",
+        message=message
+    )
+
+
+
+# =================================================
+#                 RETURN BOOK
+# =================================================
+
+
+@app.route("/return", methods=["GET","POST"])
+def return_book():
+
+    message = ""
+
+
+    if request.method == "POST":
+
+        message = issue.return_book(
+
+            request.form["student_id"],
+            request.form["book_id"]
+
+        )
+
+
+    return render_template(
+        "return.html",
+        message=message
+    )
+
+
+
+# =================================================
+#                  REPORTS
+# =================================================
+
+
+@app.route("/reports")
+def reports():
+
+    data = report.get_reports()
+
+
+    return render_template(
+        "report.html",
+        data=data
+    )
+
+
+
+# =================================================
+#                  RUN APPLICATION
+# =================================================
+
+
+if __name__ == "__main__":
+
+    app.run(debug=True)
